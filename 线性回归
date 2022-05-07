@@ -1,0 +1,56 @@
+#一元线性拟合
+import matplotlib.pyplot as plt
+import numpy as np
+
+#x = np.array([1,2,3,4,5,6,7,8])
+#y = np.array([1,2,3,4,5,6,7,8])
+#三分类
+x = np.array([1,2,3,4,5,6,7,8,9,10,11,12,13,14])
+y = np.array([4.98,5,7,7,11,5,4.5,5.1,4.9,8.8,5,5.1,5.2,8])
+x_mean = np.mean(x)
+y_mean = np.mean(y)
+
+denominator = 0.0 #分母
+numerator = 0.0   #分子
+for x_i,y_i in zip(x,y):
+    numerator += (x_i - x_mean) * (y_i - y_mean)
+    denominator += (x_i - x_mean) ** 2
+a = numerator / denominator #求斜率a
+b = y_mean - a * x_mean     #求截距b
+
+x_test = np.linspace(0,14,14)
+y_predict = a * x_test + b
+y_predict_mean = np.mean(y_predict)
+'''
+x_test = x
+y_predict = np.arange(14)
+
+for x_i,i in zip(x,range(14)):
+    y_predict[i] = a * x_i + b
+y_predict_mean = np.mean(y_predict)
+'''
+    
+#“方差”实际与预测差值平方和
+Dy = 0.0
+for x_i,y_i in zip(x,y):
+    Dy += (y_i - (a * x_i + b)) ** 2
+
+#r2检验
+ssr = 0.0;
+sst = 0.0;
+for y_i,y_predict_i in zip(y,y_predict):
+    ssr += (y_predict_i - y_predict_mean) ** 2
+    sst += (y_i - y_mean) ** 2
+r2 = float(ssr/sst)
+
+plt.ylim(0.0,22.2)
+#散点图
+plt.scatter(x, y, color='b')
+#折线图
+plt.plot(x, y, color='g')
+#柱状图
+#plt.hist(x, bins=3)
+plt.plot(x_test, y_predict, color='r')
+plt.xlabel('day', fontproperties='simHei',fontsize=15)
+plt.ylabel('BG', fontproperties='simHei',fontsize=15)
+plt.show()
